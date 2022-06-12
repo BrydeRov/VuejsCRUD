@@ -24,13 +24,13 @@
                 <div class="container">
                     <div class="row">
                       <div class="col">
-                        <div class="product-image">
+                        <div class="product-image text-center">
                             <!-- Image goes here -->
                             <img v-bind:src="image"  class="img-fluid border border-5" alt="">
                         </div>
                       </div>
                       <div class="col">
-                        <div class="product-info text-center">
+                        <div class="product-info text-center justify-content-center align-items-center">
                             <h1>{{ product }}</h1>
                             <p v-if="onSale"></p>
                             <p v-else>Out of Stock &#128532;</p>
@@ -38,6 +38,13 @@
                             <p v-else.if="inventory <= 10 && inventory > 0">Almost sold out!</p>
                             <p v-else>Sold Out! &#128532;</p>
                             <p>{{ description }}</p>
+                            <ul class="list-group my-2 py-2">
+                                <li v-for="detail in details" class="list-group-item">{{detail}}</li>
+                            </ul>
+                            <div class="d-flex flex-row mb-3 justify-content-center">
+                                <div v-for="variant in variants" :key="variant.id" class="p-2">{{variant.color}}</div>
+                            </div>
+                            <p v-for="(size, index) in sizes" :key="index">{{sizes.size}}</p>
                             <a v-bind:href="url">
                                 <button type="button" class="btn btn-dark">Buy now!</button>
                             </a>
