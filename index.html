@@ -5,28 +5,45 @@
     <title>Vue Mastery</title>
     <!-- Bootstrap 5.2.0 BETA -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+   <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.3/font/bootstrap-icons.css">
     <!-- Import Styles -->
-    <link rel="stylesheet" href="./assets/styles.css" />
+    <link rel="stylesheet" href="./assets/style.css" />
     <!-- Import Vue.js -->
     <script src="https://unpkg.com/vue@3.0.0-beta.12/dist/vue.global.js"></script>
+
+
   </head>
   <body>
     <div id="app">
 
+
         <nav class="navbar bg-light">
             <div class="container-fluid">
-              <a class="navbar-brand" href="#">Navbar</a>
+              <a class="navbar-brand align-items-center" href="#">
+                <img v-bind:src="logo" class="rounded" alt="" width="35" height="35"> 
+                Vuejs Market
+              </a>
+              <button type="button" class="btn btn-outline-dark position-relative btn-sm text-end">
+                <i class="bi bi-cart"> 
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                   {{ cart }}          
+                  </span>
+                </i>
+               
+              </button>
             </div>
-          </nav>
+        </nav>
+        
 
-        <div class="product-display my-5 py-5">
+        <div class="product-display my-4 py-4">
             <div class="product-container">
                 <div class="container">
                     <div class="row">
                       <div class="col">
                         <div class="product-image text-center">
                             <!-- Image goes here -->
-                            <img v-bind:src="image"  class="img-fluid border border-5" alt="">
+                            <img v-bind:src="image"  class="rounded img-thumbnail border border-5 w-75" alt="">
                         </div>
                       </div>
                       <div class="col">
@@ -34,19 +51,40 @@
                             <h1>{{ product }}</h1>
                             <p v-if="onSale"></p>
                             <p v-else>Out of Stock &#128532;</p>
-                            <p v-if="inventory > 10">In Stock</p>
-                            <p v-else.if="inventory <= 10 && inventory > 0">Almost sold out!</p>
+                            <p v-if="inventory > 10">In Stock &#129297;</p>
+                            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
                             <p v-else>Sold Out! &#128532;</p>
-                            <p>{{ description }}</p>
-                            <ul class="list-group my-2 py-2">
-                                <li v-for="detail in details" class="list-group-item">{{detail}}</li>
-                            </ul>
+                            <div class="container w-50 mb-2">
+                              <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                  <h2 class="accordion-header" id="headingOne">
+                                    <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                                      Details
+                                    </button>
+                                  </h2>
+                                  <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                    <div class="accordion-body"><ul></ul>
+                                        <li v-for="detail in details" class="list-group-item">{{detail}}</li>                        
+                                    </div>
+                                  </div>
+                                </div>                              
+                              </div>
+                            </div>                            
+                            
+                            
                             <div class="d-flex flex-row mb-3 justify-content-center">
-                                <div v-for="variant in variants" :key="variant.id" class="p-2">{{variant.color}}</div>
+                                <div 
+                                v-for="variant in variants" 
+                                :key="variant.id" 
+                                @mouseover="updateImage(variant.image)" 
+                                class="p-2"
+                                >
+                                  <button class="btn-circle" :style="{mouse: pointer, backgroundColor: variant.color }"></button>
+                                </div>
                             </div>
-                            <p v-for="(size, index) in sizes" :key="index">{{sizes.size}}</p>
-                            <a v-bind:href="url">
-                                <button type="button" class="btn btn-dark">Buy now!</button>
+                            <a  type="button">
+                                <button class="btn btn-dark" @click="addToCart" :disabled="!onSale">Add to Cart!</button><br>
+                                <button v-if="cart >= 1" class="btn btn-danger my-2" @click="removeFromCart">Remove from Cart</button>
                             </a>
                         </div>
                       </div>                      
