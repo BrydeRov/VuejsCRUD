@@ -22,9 +22,9 @@
             <div class="container-fluid">
               <a class="navbar-brand align-items-center" href="#">
                 <img v-bind:src="logo" class="rounded" alt="" width="35" height="35"> 
-                Vuejs Market
+                {{ website_title }}
               </a>
-              <button type="button" class="btn btn-outline-dark position-relative btn-sm text-end">
+              <button type="button" class="btn btn-outline-dark position-relative text-end">
                 <i class="bi bi-cart"> 
                   <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                    {{ cart }}          
@@ -36,7 +36,7 @@
         </nav>
         
 
-        <div class="product-display my-4 py-4">
+        <div class="d-flex flex-column product-display my-4 py-4">
             <div class="product-container">
                 <div class="container">
                     <div class="row">
@@ -48,13 +48,12 @@
                       </div>
                       <div class="col">
                         <div class="product-info text-center justify-content-center align-items-center">
-                            <h1>{{ product }}</h1>
-                            <p v-if="onSale"></p>
-                            <p v-else>Out of Stock &#128532;</p>
-                            <p v-if="inventory > 10">In Stock &#129297;</p>
-                            <p v-else-if="inventory <= 10 && inventory > 0">Almost sold out!</p>
-                            <p v-else>Sold Out! &#128532;</p>
-                            <div class="container w-50 mb-2">
+                            <h1>{{ title }}</h1>                           
+                            <h5 v-if="inStock > 10">In Stock ✔</h5>
+                            <h5 v-else-if="inStock <= 10 && inStock > 0">Almost sold out!</h5>
+                            <h5 v-else>Sold Out! 😢</h5>
+                            <h5>${{ price }}.00 MXN</h5>                            
+                            <div class="container w-50 mb-2 mt-2">
                               <div class="accordion" id="accordionExample">
                                 <div class="accordion-item">
                                   <h2 class="accordion-header" id="headingOne">
@@ -64,7 +63,8 @@
                                   </h2>
                                   <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
                                     <div class="accordion-body"><ul></ul>
-                                        <li v-for="detail in details" class="list-group-item">{{detail}}</li>                        
+                                        <li v-for="detail in details" class="list-group-item">{{detail}}</li>      
+                                        <li></li>
                                     </div>
                                   </div>
                                 </div>                              
@@ -74,16 +74,16 @@
                             
                             <div class="d-flex flex-row mb-3 justify-content-center">
                                 <div 
-                                v-for="variant in variants" 
+                                v-for="(variant, index) in variants" 
                                 :key="variant.id" 
-                                @mouseover="updateImage(variant.image)" 
+                                @click="updateVariant(index)" 
                                 class="p-2"
                                 >
-                                  <button class="btn-circle" :style="{mouse: pointer, backgroundColor: variant.color }"></button>
+                                  <button class="btn-circle" :style="{mouse: pointer, backgroundColor: variant.color }"></button>                                  
                                 </div>
                             </div>
                             <a  type="button">
-                                <button class="btn btn-dark" @click="addToCart" :disabled="!onSale">Add to Cart!</button><br>
+                                <button class="btn btn-dark" @click="addToCart" :disabled="!inStock">Add to Cart!</button><br>
                                 <button v-if="cart >= 1" class="btn btn-danger my-2" @click="removeFromCart">Remove from Cart</button>
                             </a>
                         </div>
